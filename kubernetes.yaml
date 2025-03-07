@@ -1,39 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-management-app
-  labels:
-    app: book-app
+  name: bookmanagement-app-deployment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: book-app
+      app: bookmanagement-app
   template:
     metadata:
       labels:
-        app: book-app
+        app: bookmanagement-app
     spec:
       containers:
       - name: book-app-container
-        image: chavanakshay/book-management # Use your private repository name
+        image: sainiharika/bookmanagement-app:latest # Use your private repository name
         ports:
         - containerPort: 8081
       imagePullSecrets:
-      - name: dockerhub-secret # Reference the secret created for Docker Hub
+      - name: my-registry-secret # Reference the secret created for Docker Hub
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: book-app-service
-  labels:
-    app: book-app
+  name: bookmanagement-app-service
 spec:
   type: NodePort  # Change to LoadBalancer if using cloud or ClusterIP for internal access
   selector:
-    app: book-app
+    app: bookmanagement-app
   ports:
     - protocol: TCP
       port: 8081       # Port for external access
